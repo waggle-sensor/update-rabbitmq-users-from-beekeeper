@@ -1,4 +1,4 @@
-# Sync users to RabbitMQ
+# Update RabbitMQ users from Beekeeper
 
 This is script syncs nodes in Beekeeper to specific RabbitMQ user accounts on a Beehive. It is primarily intended to be run as a cronjob.
 
