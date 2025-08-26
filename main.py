@@ -59,16 +59,23 @@ def get_node_users_for_beehive():
     r.raise_for_status()
     items = r.json()["data"]
     for item in items:
-        if item["beehive"] == BEEHIVE_NAME:
-            user = "node-" + item["id"].lower()
-            users.add(user)
+        if item["beehive"] != BEEHIVE_NAME:
+            continue
+        user = "node-" + item["id"].lower()
+        users.add(user)
 
     # Get node user from admin database.
     r = requests.get("https://auth.sagecontinuum.org/service-node-users")
     r.raise_for_status()
     items = r.json()
     for item in items:
-        users.add(item)
+        if item["active"]:
+            users.add(item["user"])
+        else:
+            try:
+                users.remove(item["user"])
+            except KeyError:
+                pass
 
     return users
 
