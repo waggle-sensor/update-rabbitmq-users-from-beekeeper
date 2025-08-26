@@ -79,24 +79,31 @@ def main(dry_run: bool):
 
         want_users = get_node_users_for_beehive()
         has_users = get_rabbitmq_node_users(session)
-        delete_users = has_users - want_users
+        add_users = want_users - has_users
+        remove_users = has_users - want_users
 
-        print("Adding users:")
-        for user in sorted(want_users - has_users):
-            print(user)
-        print()
+        if len(add_users) == 0:
+            print("No users to add.")
+        else:
+            print("Adding users:")
+            for user in sorted(add_users):
+                print(user)
+            print()
 
-        print("Removing users:")
-        for user in sorted(delete_users):
-            print(user)
-        print()
+        if len(remove_users) == 0:
+            print("No users to remove.")
+        else:
+            print("Removing users:")
+            for user in sorted(remove_users):
+                print(user)
+            print()
 
         if dry_run:
             print("Run in dry run mode. Will not make changes!")
             return
 
         add_rabbitmq_users(session, sorted(want_users))
-        delete_rabbitmq_users(session, sorted(delete_users))
+        delete_rabbitmq_users(session, sorted(remove_users))
 
 
 if __name__ == "__main__":
